@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piyasewana Society Management</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f7fa;
+            color: #2d3748;
+            line-height: 1.6;
+        }
+
+        #root {
+            min-height: 100vh;
+        }
+
+        /* Login Screen */
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .login-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 48px;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .login-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+
+        .login-subtitle {
+            color: #718096;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s;
+            outline: none;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+
+        .input-field:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .login-btn:hover {
+            background: #5568d3;
+            transform: translateY(-1px);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .error-msg {
+            color: #e53e3e;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .error-msg.show {
+            display: block;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* Developer Credit */
+        .developer-credit {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            font-size: 12px;
+            color: #a0aec0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .developer-credit .heart {
+            color: #fc8181;
+            font-size: 11px;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .developer-name {
+            font-weight: 600;
+            color: #718096;
+        }
+
+        /* Admin Dashboard */
+        .admin-container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .admin-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .admin-badge {
+            background: #667eea;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+
+        .btn-danger {
+            background: #fc8181;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #f56565;
+        }
+
+        .btn-success {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #38a169;
+        }
+
+        .btn-secondary {
+            background: #edf2f7;
+            color: #4a5568;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        .btn-warning {
+            background: #ed8936;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #dd6b20;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* Table Styles */
+        .table-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #f7fafc;
+        }
+
+        th {
+            padding: 16px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: #4a5568;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 16px;
+            border-top: 1px solid #edf2f7;
+            font-size: 14px;
+            color: #2d3748;
+        }
+
+        tr:hover {
+            background: #f7fafc;
+        }
+
+        .member-name {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .member-number {
+            font-family: monospace;
+            background: #edf2f7;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .amount {
+            font-weight: 600;
+            color: #38a169;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-current {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .status-overdue {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: nowrap;
+        }
+
+        /* Member Card View */
+        .member-view-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .member-card {
+            background: white;
+            border-radius: 24px;
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .member-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 32px;
+        }
+
+        .member-card-name {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .member-card-number {
+            color: #718096;
+            font-size: 16px;
+            margin-bottom: 30px;
+            font-family: monospace;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .info-item {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .info-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .info-value.amount {
+            color: #38a169;
+        }
+
+        .status-banner {
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .status-banner.current {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .status-banner.overdue {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: 2px solid #e2e8f0;
+            color: #718096;
+            padding: 12px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 450px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #a0aec0;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background: #f7fafc;
+            color: #2d3748;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 8px;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        .form-input:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .modal-actions .btn {
+            flex: 1;
+            justify-content: center;
+        }
+
+        /* Share Modal */
+        .share-box {
+            background: #f7fafc;
+            border: 2px dashed #cbd5e0;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 12px;
+            color: #4a5568;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .share-instructions {
+            background: #ebf8ff;
+            border-left: 4px solid #4299e1;
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #2c5282;
+        }
+
+        .qr-placeholder {
+            width: 200px;
+            height: 200px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+            color: #a0aec0;
+        }
+
+        .qr-placeholder i {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        /* Delete Confirmation */
+        .confirm-text {
+            color: #4a5568;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .confirm-member {
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #a0aec0;
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-text {
+            font-size: 16px;
+        }
+
+        /* Logout */
+        .logout-btn {
+            background: transparent;
+            border: 2px solid #e2e8f0;
+            color: #718096;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            border-color: #fc8181;
+            color: #f56565;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .stat-value.total {
+            color: #667eea;
+        }
+
+        /* Toast Notification */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: #2d3748;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideUp 0.3s ease-out;
+            font-size: 14px;
+            max-width: 300px;
+        }
+
+        .toast.success {
+            background: #48bb78;
+        }
+
+        .toast.error {
+            background: #f56565;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            th, td {
+                padding: 12px 8px;
+                font-size: 13px;
+            }
+
+            .actions {
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .btn-sm {
+                padding: 4px 8px;
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 30px 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .member-card {
+                padding: 30px 20px;
+            }
+
+            .member-card-name {
+                font-size: 22px;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Action bar */
+        .action-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .sync-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: #48bb78;
+            background: #f0fff4;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .sync-indicator.offline {
+            color: #ed8936;
+            background: #fffaf0;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // Initial sample data
+        const INITIAL_MEMBERS = [
+            { id: 1, name: "Sunil Perera", number: "001", totalPaid: 25000, lastMonthPaid: "December 2026" },
+            { id: 2, name: "Kamal Silva", number: "002", totalPaid: 18000, lastMonthPaid: "November 2026" },
+            { id: 3, name: "Nimal Fernando", number: "003", totalPaid: 30000, lastMonthPaid: "December 2026" },
+            { id: 4, name: "Priyantha Gamage", number: "004", totalPaid: 12000, lastMonthPaid: "October 2026" },
+            { id: 5, name: "Samantha Rajapaksa", number: "005", totalPaid: 22000, lastMonthPaid: "December 2026" }
+        ];
+
+        const MONTHS = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+
+        // Utility to get current month/year for status calculation
+        const getCurrentMonthYear = () => {
+            const now = new Date();
+            return `${MONTHS[now.getMonth()]} ${now.getFullYear()}`;
+        };
+
+        const parseMonthYear = (str) => {
+            const parts = str.split(' ');
+            return { month: parts[0], year: parseInt(parts[1]) };
+        };
+
+        const isUpToDate = (lastMonthPaid) => {
+            const current = new Date();
+            const currentYear = current.getFullYear();
+            const currentMonth = current.getMonth();
+
+            const paid = parseMonthYear(lastMonthPaid);
+            const paidYear = paid.year;
+            const paidMonthIndex = MONTHS.indexOf(paid.month);
+
+            if (paidYear > currentYear) return true;
+            if (paidYear < currentYear) return false;
+            return paidMonthIndex >= currentMonth;
+        };
+
+        // Toast Hook
+        const useToast = () => {
+            const [toasts, setToasts] = useState([]);
+
+            const addToast = (message, type = 'info') => {
+                const id = Date.now();
+                setToasts(prev => [...prev, { id, message, type }]);
+                setTimeout(() => {
+                    setToasts(prev => prev.filter(t => t.id !== id));
+                }, 3000);
+            };
+
+            return { toasts, addToast };
+        };
+
+        // Toast Component
+        const ToastContainer = ({ toasts }) => {
+            return (
+                <div className="toast-container">
+                    {toasts.map(toast => (
+                        <div key={toast.id} className={`toast ${toast.type}`}>
+                            <i className={`fas ${
+                                toast.type === 'success' ? 'fa-check-circle' : 
+                                toast.type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'
+                            }`}></i>
+                            {toast.message}
+                        </div>
+                    ))}
+                </div>
+            );
+        };
+
+        // App Component
+        const App = () => {
+            const [view, setView] = useState('login');
+            const [members, setMembers] = useState([]);
+            const [currentMember, setCurrentMember] = useState(null);
+            const [loginInput, setLoginInput] = useState('');
+            const [loginError, setLoginError] = useState(false);
+            const { toasts, addToast } = useToast();
+
+            // Check URL for shared data on mount
+            useEffect(() => {
+                const params = new URLSearchParams(window.location.search);
+                const sharedData = params.get('data');
+
+                if (sharedData) {
+                    try {
+                        const decoded = JSON.parse(atob(sharedData));
+                        if (decoded.members && Array.isArray(decoded.members)) {
+                            setMembers(decoded.members);
+                            localStorage.setItem('piyasewana_members', JSON.stringify(decoded.members));
+                            addToast('Loaded shared society data!', 'success');
+                        }
+                    } catch (e) {
+                        console.error('Failed to load shared data');
+                    }
+                } else {
+                    const saved = localStorage.getItem('piyasewana_members');
+                    if (saved) {
+                        setMembers(JSON.parse(saved));
+                    } else {
+                        setMembers(INITIAL_MEMBERS);
+                        localStorage.setItem('piyasewana_members', JSON.stringify(INITIAL_MEMBERS));
+                    }
+                }
+            }, []);
+
+            // Save to localStorage whenever members change
+            useEffect(() => {
+                if (members.length > 0) {
+                    localStorage.setItem('piyasewana_members', JSON.stringify(members));
+                }
+            }, [members]);
+
+            const handleLogin = (e) => {
+                e.preventDefault();
+                const input = loginInput.trim();
+
+                if (input === '2010') {
+                    setView('admin');
+                    setLoginError(false);
+                    setLoginInput('');
+                } else {
+                    const found = members.find(m => m.number === input);
+                    if (found) {
+                        setCurrentMember(found);
+                        setView('member');
+                        setLoginError(false);
+                        setLoginInput('');
+                    } else {
+                        setLoginError(true);
+                        setTimeout(() => setLoginError(false), 3000);
+                    }
+                }
+            };
+
+            const handleLogout = () => {
+                setView('login');
+                setCurrentMember(null);
+                setLoginInput('');
+            };
+
+            const addMember = (member) => {
+                const newId = members.length > 0 ? Math.max(...members.map(m => m.id)) + 1 : 1;
+                const newMember = { ...member, id: newId };
+                setMembers([...members, newMember]);
+                addToast('Member added successfully!', 'success');
+            };
+
+            const updateMember = (updatedMember) => {
+                setMembers(members.map(m => m.id === updatedMember.id ? updatedMember : m));
+                if (currentMember && currentMember.id === updatedMember.id) {
+                    setCurrentMember(updatedMember);
+                }
+                addToast('Member updated!', 'success');
+            };
+
+            const deleteMember = (id) => {
+                setMembers(members.filter(m => m.id !== id));
+                addToast('Member deleted!', 'success');
+            };
+
+            return (
+                <div className="fade-in">
+                    <ToastContainer toasts={toasts} />
+                    {view === 'login' && (
+                        <LoginScreen 
+                            input={loginInput} 
+                            setInput={setLoginInput} 
+                            onSubmit={handleLogin} 
+                            error={loginError}
+                        />
+                    )}
+                    {view === 'admin' && (
+                        <AdminDashboard 
+                            members={members} 
+                            onLogout={handleLogout}
+                            onAdd={addMember}
+                            onUpdate={updateMember}
+                            onDelete={deleteMember}
+                            addToast={addToast}
+                        />
+                    )}
+                    {view === 'member' && (
+                        <MemberView 
+                            member={currentMember} 
+                            onBack={handleLogout}
+                        />
+                    )}
+                </div>
+            );
+        };
+
+        // Login Screen
+        const LoginScreen = ({ input, setInput, onSubmit, error }) => {
+            const inputRef = useRef(null);
+
+            useEffect(() => {
+                inputRef.current?.focus();
+            }, []);
+
+            return (
+                <div className="login-container">
+                    <div className="login-card slide-in">
+                        <div className="logo">
+                            <i className="fas fa-users"></i>
+                        </div>
+                        <h1 className="login-title">Piyasewana Society</h1>
+                        <p className="login-subtitle">Enter your membership number to continue</p>
+
+                        <form onSubmit={onSubmit}>
+                            <div className="input-group">
+                                <input
+                                    ref={inputRef}
+                                    type="text"
+                                    className="input-field"
+                                    placeholder="Enter your number"
+                                    value={input}
+                                    onChange={(e) => setInput(e.target.value)}
+                                    maxLength="10"
+                                />
+                            </div>
+                            <button type="submit" className="login-btn">
+                                <i className="fas fa-sign-in-alt"></i> Enter
+                            </button>
+                        </form>
+
+                        <div className={`error-msg ${error ? 'show' : ''}`}>
+                            <i className="fas fa-exclamation-circle"></i> Member number not valid
+                        </div>
+
+                        <div className="developer-credit">
+                            <span>Developed with</span>
+                            <span className="heart"><i className="fas fa-heart"></i></span>
+                            <span>by</span>
+                            <span className="developer-name">Lasith</span>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // Admin Dashboard
+        const AdminDashboard = ({ members, onLogout, onAdd, onUpdate, onDelete, addToast }) => {
+            const [showAddModal, setShowAddModal] = useState(false);
+            const [editingMember, setEditingMember] = useState(null);
+            const [deletingMember, setDeletingMember] = useState(null);
+            const [showShareModal, setShowShareModal] = useState(false);
+            const [searchTerm, setSearchTerm] = useState('');
+
+            const filteredMembers = members.filter(m => 
+                m.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                m.number.includes(searchTerm)
+            );
+
+            const totalAmount = members.reduce((sum, m) => sum + m.totalPaid, 0);
+
+            return (
+                <div className="admin-container fade-in">
+                    <div className="admin-header">
+                        <div>
+                            <h1 className="admin-title">
+                                <i className="fas fa-shield-alt" style={{color: '#667eea', marginRight: '10px'}}></i>
+                                Society Management
+                            </h1>
+                            <span className="admin-badge">Admin Panel</span>
+                        </div>
+                        <button className="logout-btn" onClick={onLogout}>
+                            <i className="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+
+                    <div className="stats-grid">
+                        <div className="stat-card">
+                            <div className="stat-label">Total Members</div>
+                            <div className="stat-value">{members.length}</div>
+                        </div>
+                        <div className="stat-card">
+                            <div className="stat-label">Total Contributions</div>
+                            <div className="stat-value total">Rs. {totalAmount.toLocaleString()}</div>
+                        </div>
+                        <div className="stat-card">
+                            <div className="stat-label">Up to Date</div>
+                            <div className="stat-value" style={{color: '#48bb78'}}>
+                                {members.filter(m => isUpToDate(m.lastMonthPaid)).length}
+                            </div>
+                        </div>
+                        <div className="stat-card">
+                            <div className="stat-label">Overdue</div>
+                            <div className="stat-value" style={{color: '#f56565'}}>
+                                {members.filter(m => !isUpToDate(m.lastMonthPaid)).length}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="action-bar">
+                        <div className="input-group" style={{flex: 1, minWidth: '200px', margin: 0}}>
+                            <input
+                                type="text"
+                                className="input-field"
+                                style={{textAlign: 'left', letterSpacing: 'normal'}}
+                                placeholder="Search members..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                        </div>
+                        <button className="btn btn-primary" onClick={() => setShowAddModal(true)}>
+                            <i className="fas fa-plus"></i> Add Member
+                        </button>
+                        <button className="btn btn-warning" onClick={() => setShowShareModal(true)}>
+                            <i className="fas fa-share-alt"></i> Share Data
+                        </button>
+                    </div>
+
+                    <div className="table-container">
+                        <div className="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Member #</th>
+                                        <th>Total Paid</th>
+                                        <th>Last Month Paid</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {filteredMembers.length === 0 ? (
+                                        <tr>
+                                            <td colSpan="6">
+                                                <div className="empty-state">
+                                                    <div className="empty-icon"><i className="fas fa-inbox"></i></div>
+                                                    <div className="empty-text">No members found</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ) : (
+                                        filteredMembers.map(member => (
+                                            <tr key={member.id}>
+                                                <td className="member-name">{member.name}</td>
+                                                <td><span className="member-number">{member.number}</span></td>
+                                                <td className="amount">Rs. {member.totalPaid.toLocaleString()}</td>
+                                                <td>{member.lastMonthPaid}</td>
+                                                <td>
+                                                    <span className={`status-badge ${isUpToDate(member.lastMonthPaid) ? 'status-current' : 'status-overdue'}`}>
+                                                        {isUpToDate(member.lastMonthPaid) ? 'Current' : 'Overdue'}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <div className="actions">
+                                                        <button 
+                                                            className="btn btn-secondary btn-sm"
+                                                            onClick={() => setEditingMember(member)}
+                                                        >
+                                                            <i className="fas fa-edit"></i> Edit
+                                                        </button>
+                                                        <button 
+                                                            className="btn btn-danger btn-sm"
+                                                            onClick={() => setDeletingMember(member)}
+                                                        >
+                                                            <i className="fas fa-trash"></i> Delete
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    {showAddModal && (
+                        <MemberModal
+                            title="Add New Member"
+                            onClose={() => setShowAddModal(false)}
+                            onSave={(member) => {
+                                onAdd(member);
+                                setShowAddModal(false);
+                            }}
+                        />
+                    )}
+
+                    {editingMember && (
+                        <MemberModal
+                            title="Edit Member"
+                            member={editingMember}
+                            onClose={() => setEditingMember(null)}
+                            onSave={(member) => {
+                                onUpdate(member);
+                                setEditingMember(null);
+                            }}
+                        />
+                    )}
+
+                    {deletingMember && (
+                        <ConfirmModal
+                            member={deletingMember}
+                            onClose={() => setDeletingMember(null)}
+                            onConfirm={() => {
+                                onDelete(deletingMember.id);
+                                setDeletingMember(null);
+                            }}
+                        />
+                    )}
+
+                    {showShareModal && (
+                        <ShareModal
+                            members={members}
+                            onClose={() => setShowShareModal(false)}
+                            addToast={addToast}
+                        />
+                    )}
+                </div>
+            );
+        };
+
+        // Share Modal
+        const ShareModal = ({ members, onClose, addToast }) => {
+            const [shareUrl, setShareUrl] = useState('');
+            const [copied, setCopied] = useState(false);
+
+            useEffect(() => {
+                generateShareLink();
+            }, []);
+
+            const generateShareLink = () => {
+                const data = { members, timestamp: new Date().toISOString() };
+                const encoded = btoa(JSON.stringify(data));
+                const baseUrl = window.location.origin + window.location.pathname;
+                const url = `${baseUrl}?data=${encoded}`;
+                setShareUrl(url);
+            };
+
+            const copyToClipboard = () => {
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    setCopied(true);
+                    addToast('Link copied to clipboard!', 'success');
+                    setTimeout(() => setCopied(false), 2000);
+                }).catch(() => {
+                    const textArea = document.createElement('textarea');
+                    textArea.value = shareUrl;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    setCopied(true);
+                    addToast('Link copied to clipboard!', 'success');
+                    setTimeout(() => setCopied(false), 2000);
+                });
+            };
+
+            const shareViaWhatsApp = () => {
+                const text = `Piyasewana Society - Updated Member Data: ${shareUrl}`;
+                window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+            };
+
+            return (
+                <div className="modal-overlay" onClick={onClose}>
+                    <div className="modal slide-in" onClick={e => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h2 className="modal-title">
+                                <i className="fas fa-share-alt" style={{color: '#ed8936', marginRight: '10px'}}></i>
+                                Share Society Data
+                            </h2>
+                            <button className="modal-close" onClick={onClose}>
+                                <i className="fas fa-times"></i>
+                            </button>
+                        </div>
+
+                        <div className="share-instructions">
+                            <i className="fas fa-info-circle" style={{marginRight: '8px'}}></i>
+                            Copy this link and share it with your relatives. When they open it, they will see all the current member information you have updated.
+                        </div>
+
+                        <div className="form-group">
+                            <label className="form-label">Shareable Link ({members.length} members included)</label>
+                            <div className="share-box">
+                                {shareUrl}
+                            </div>
+                        </div>
+
+                        <div className="modal-actions">
+                            <button type="button" className="btn btn-secondary" onClick={onClose}>
+                                Close
+                            </button>
+                            <button type="button" className="btn btn-success" onClick={copyToClipboard}>
+                                <i className={`fas ${copied ? 'fa-check' : 'fa-copy'}`}></i> 
+                                {copied ? 'Copied!' : 'Copy Link'}
+                            </button>
+                        </div>
+
+                        <button 
+                            type="button" 
+                            className="btn btn-success" 
+                            onClick={shareViaWhatsApp}
+                            style={{width: '100%', marginTop: '10px', background: '#25D366', justifyContent: 'center'}}
+                        >
+                            <i className="fab fa-whatsapp"></i> Share via WhatsApp
+                        </button>
+                    </div>
+                </div>
+            );
+        };
+
+        // Member Modal (Add/Edit)
+        const MemberModal = ({ title, member, onClose, onSave }) => {
+            const [formData, setFormData] = useState({
+                name: member?.name || '',
+                number: member?.number || '',
+                totalPaid: member?.totalPaid || 0,
+                lastMonthPaid: member?.lastMonthPaid || getCurrentMonthYear()
+            });
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                onSave({
+                    ...(member || {}),
+                    ...formData,
+                    totalPaid: parseInt(formData.totalPaid) || 0
+                });
+            };
+
+            const generateMonthOptions = () => {
+                const options = [];
+                const currentYear = new Date().getFullYear();
+                for (let year = currentYear - 2; year <= currentYear + 2; year++) {
+                    MONTHS.forEach((month, index) => {
+                        options.push(`${month} ${year}`);
+                    });
+                }
+                return options.reverse();
+            };
+
+            return (
+                <div className="modal-overlay" onClick={onClose}>
+                    <div className="modal slide-in" onClick={e => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h2 className="modal-title">{title}</h2>
+                            <button className="modal-close" onClick={onClose}>
+                                <i className="fas fa-times"></i>
+                            </button>
+                        </div>
+
+                        <form onSubmit={handleSubmit}>
+                            <div className="form-group">
+                                <label className="form-label">Full Name</label>
+                                <input
+                                    type="text"
+                                    className="form-input"
+                                    value={formData.name}
+                                    onChange={e => setFormData({...formData, name: e.target.value})}
+                                    required
+                                    placeholder="Enter member name"
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label className="form-label">Membership Number</label>
+                                <input
+                                    type="text"
+                                    className="form-input"
+                                    value={formData.number}
+                                    onChange={e => setFormData({...formData, number: e.target.value})}
+                                    required
+                                    placeholder="e.g., 006"
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label className="form-label">Total Amount Paid (Rs.)</label>
+                                <input
+                                    type="number"
+                                    className="form-input"
+                                    value={formData.totalPaid}
+                                    onChange={e => setFormData({...formData, totalPaid: e.target.value})}
+                                    required
+                                    min="0"
+                                    placeholder="0"
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label className="form-label">Last Month Paid</label>
+                                <select
+                                    className="form-select"
+                                    value={formData.lastMonthPaid}
+                                    onChange={e => setFormData({...formData, lastMonthPaid: e.target.value})}
+                                    required
+                                >
+                                    {generateMonthOptions().map(opt => (
+                                        <option key={opt} value={opt}>{opt}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className="modal-actions">
+                                <button type="button" className="btn btn-secondary" onClick={onClose}>
+                                    Cancel
+                                </button>
+                                <button type="submit" className="btn btn-success">
+                                    <i className="fas fa-save"></i> Save Member
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            );
+        };
+
+        // Confirm Delete Modal
+        const ConfirmModal = ({ member, onClose, onConfirm }) => {
+            return (
+                <div className="modal-overlay" onClick={onClose}>
+                    <div className="modal slide-in" onClick={e => e.stopPropagation()} style={{maxWidth: '400px'}}>
+                        <div className="modal-header">
+                            <h2 className="modal-title" style={{color: '#e53e3e'}}>
+                                <i className="fas fa-exclamation-triangle" style={{marginRight: '10px'}}></i>
+                                Confirm Delete
+                            </h2>
+                            <button className="modal-close" onClick={onClose}>
+                                <i className="fas fa-times"></i>
+                            </button>
+                        </div>
+
+                        <p className="confirm-text">
+                            Are you sure you want to delete member <span className="confirm-member">{member.name}</span> (Member #{member.number})? This action cannot be undone.
+                        </p>
+
+                        <div className="modal-actions">
+                            <button type="button" className="btn btn-secondary" onClick={onClose}>
+                                Cancel
+                            </button>
+                            <button type="button" className="btn btn-danger" onClick={onConfirm}>
+                                <i className="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // Member View (Standard User)
+        const MemberView = ({ member, onBack }) => {
+            const upToDate = isUpToDate(member.lastMonthPaid);
+
+            return (
+                <div className="member-view-container fade-in">
+                    <div className="member-card slide-in">
+                        <div className="member-avatar">
+                            <i className="fas fa-user"></i>
+                        </div>
+
+                        <h2 className="member-card-name">{member.name}</h2>
+                        <p className="member-card-number">Membership #{member.number}</p>
+
+                        <div className={`status-banner ${upToDate ? 'current' : 'overdue'}`}>
+                            <i className={`fas ${upToDate ? 'fa-check-circle' : 'fa-exclamation-circle'}`} style={{marginRight: '8px'}}></i>
+                            {upToDate ? 'Payments Up to Date' : 'Payment Overdue'}
+                        </div>
+
+                        <div className="info-grid">
+                            <div className="info-item">
+                                <div className="info-label">Total Contribution</div>
+                                <div className="info-value amount">Rs. {member.totalPaid.toLocaleString()}</div>
+                            </div>
+                            <div className="info-item">
+                                <div className="info-label">Last Payment</div>
+                                <div className="info-value" style={{fontSize: '18px'}}>{member.lastMonthPaid}</div>
+                            </div>
+                        </div>
+
+                        <div style={{background: '#f7fafc', padding: '15px', borderRadius: '12px', marginBottom: '25px'}}>
+                            <div className="info-label" style={{marginBottom: '5px'}}>Status Details</div>
+                            <div style={{fontSize: '14px', color: '#4a5568'}}>
+                                {upToDate 
+                                    ? `Your payments are current until ${member.lastMonthPaid}. Thank you for your contribution!`
+                                    : `Your last payment was for ${member.lastMonthPaid}. Please update your payment to remain in good standing.`
+                                }
+                            </div>
+                        </div>
+
+                        <button className="back-btn" onClick={onBack} style={{width: '100%'}}>
+                            <i className="fas fa-arrow-left"></i> Back to Login
+                        </button>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
